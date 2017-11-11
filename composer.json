@@ -1,5 +1,5 @@
 {
-    "name": "shikung/php-mongodb-manager",
+    "name": "shikung/mongodb-manager",
     "description": "manager",
     "type": "library",
     "license": "MIT",
@@ -15,7 +15,7 @@
     },
     "autoload":{
         "psr-4":{
-            "shikung\\Mongodb": "src/"
+            "ShiKung\\Mongodb\\": "src/"
         }
     }
 }
