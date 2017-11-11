@@ -1,0 +1,21 @@
+{
+    "name": "shikung/php-mongodb-manager",
+    "description": "manager",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "tianshikun",
+            "email": "a88wangtian@163.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "autoload":{
+        "psr-4":{
+            "shikung\\Mongodb": "src/"
+        }
+    }
+}
