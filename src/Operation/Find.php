@@ -11,6 +11,8 @@ namespace ShiKung\Mongodb\Operation;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
+use MongoDB\Driver\Command;
+use MongoDB\Driver\Exception\UnexpectedValueException;
 
 class Find
 {
@@ -79,5 +81,28 @@ class Find
     public function findAndModify()
     {
         //undo
+    }
+
+    /**
+     * @param Server $server
+     * @param $db
+     * @param $collection
+     * @param $condition
+     * @return int
+     */
+    public function count($server, $db, $collection, $condition)
+    {
+        $cmd = ['count' => $collection];
+        if (!empty($condition)) {
+            $cmd['query'] = $condition;
+        }
+        $readPreference = null;
+        $command = new Command($cmd);
+        $cursor = $server->executeCommand($db, $command, $readPreference);
+        $result = current($cursor->toArray());
+        if (!isset($result->n) || !(is_integer($result->n) || is_float($result->n))) {
+            throw new UnexpectedValueException('count command did not return a numeric "n" value');
+        }
+        return (integer)$result->n;
     }
 }

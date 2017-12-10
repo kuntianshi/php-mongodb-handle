@@ -1,7 +1,7 @@
 # mongodb-manager
 利用PHP操作Mongodb数据库的类
 # 使用说明
-请使用Mongodb版本的PHP扩展,使用前先安装PHP扩展
+## 1.请使用Mongodb版本的PHP扩展,使用前先安装PHP扩展
 # 功能
 ## 连接数据库
 ## 管理数据库 manage db

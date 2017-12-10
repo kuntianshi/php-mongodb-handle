@@ -56,11 +56,10 @@ class Update
      * @param $db
      * @param $collection
      * @param $new_data
-     * @param array $options
      * @param int $timeout
      * @return bool
      */
-    public function batchUpdate($server, $db, $collection, $new_data, $options = ['multi' => true], $timeout = 1000)
+    public function batchUpdate($server, $db, $collection, $new_data, $timeout = 1000)
     {
         if (!is_string($collection) && (trim($collection) == '')) {
             throw new InvalidArgumentException('Invalid collection name.');
@@ -73,7 +72,7 @@ class Update
             foreach ($new_data as $key1 => $value1) {
                 $bulk->update($value1['condition'], $value1['new_data'], isset($value1['option']) ? $value1['option'] : array());
             }
-            $writeConcern = new WriteConcern(WriteConcern::MAJORITY, 1000);
+            $writeConcern = new WriteConcern(WriteConcern::MAJORITY, $timeout);
             $result = $server->executeBulkWrite($db . '.' . $collection, $bulk, $writeConcern);
             return $result->getUpsertedCount() + $result->getMatchedCount();
         } catch (MongoCursorException $exception) {

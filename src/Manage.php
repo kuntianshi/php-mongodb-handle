@@ -11,7 +11,12 @@ namespace ShiKung\Mongodb;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\BSON\Timestamp;
 
+use ShiKung\Mongodb\Dbs\Basic;
+use ShiKung\Mongodb\Operation\Delete;
 use ShiKung\Mongodb\Operation\Find;
+use ShiKung\Mongodb\Operation\Insert;
+use ShiKung\Mongodb\Operation\Update;
+
 
 class Manage
 {
@@ -66,6 +71,78 @@ class Manage
     }
 
     /**
+     * @param $collection
+     * @param $bind
+     * @param int $timeout
+     * @return bool|int
+     */
+    public function insert($collection, $bind, $timeout = 1000)
+    {
+        $insert = new Insert();
+        return $insert->insert($this->server, $this->db, $collection, $bind, $timeout);
+    }
+
+    /**
+     * @param $collection
+     * @param $bind
+     * @param int $timeout
+     * @return bool
+     */
+    public function batchInsert($collection, $bind, $timeout = 1000)
+    {
+        $insert = new Insert();
+        return $insert->batchInsert($this->server, $this->db, $collection, $bind, $timeout);
+    }
+
+    /**
+     * @param $collection
+     * @param $condition
+     * @param $new_data
+     * @param array $options
+     * @return bool
+     */
+    public function update($collection, $condition, $new_data, $options = [])
+    {
+        $update = new Update();
+        return $update->update($this->server, $this->db, $collection, $condition, $new_data, $options);
+    }
+
+    /**
+     * @param $collection
+     * @param $condition
+     * @param $new_data
+     * @return mixed
+     */
+    public function batchUpdate($collection, $condition, $new_data)
+    {
+        $update = new Update();
+        return $update->batchUpdate($this->server, $this->db, $collection, $condition, $new_data);
+    }
+
+    /**
+     * @param $collection
+     * @param $condition
+     * @return int
+     */
+    public function count($collection, $condition)
+    {
+        $find = new Find();
+        return $find->count($this->server, $this->db, $collection, $condition);
+    }
+
+    /**
+     * @param $collection
+     * @param $condition
+     * @param array $options
+     * @return bool|int
+     */
+    public function delete($collection, $condition, $options = [])
+    {
+        $delete = new Delete();
+        return $delete->delete($this->server, $this->db, $collection, $condition, $options);
+    }
+
+    /**
      * @param $timestamp
      * @return mixed
      */
@@ -82,5 +159,14 @@ class Manage
     public static function getDate($Date, $format = 'Y-m-d')
     {
         return date($format, ((string)$Date) / 1000);
+    }
+
+    /**
+     * @return array
+     */
+    public function getServerInfo()
+    {
+        $server = new Basic();
+        return $server->getServerInfo($this->server);
     }
 }

@@ -112,8 +112,6 @@ class Connection
             return $this->getManager()->selectServer(new ReadPreference($readPreference));
         } catch (ConnectionException $ex) {
             $this->error = $ex->getMessage();
-        } catch (AuthenticationException $ex) {
-            $this->error = $ex->getMessage();
         }
         if ($this->retry > 0) {
             $this->getServer(--$this->retry);
