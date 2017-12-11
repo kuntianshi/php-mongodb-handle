@@ -12,6 +12,7 @@ use MongoDB\BSON\UTCDateTime;
 use MongoDB\BSON\Timestamp;
 
 use ShiKung\Mongodb\Dbs\Basic;
+use ShiKung\Mongodb\Operation\Aggregate;
 use ShiKung\Mongodb\Operation\Delete;
 use ShiKung\Mongodb\Operation\Find;
 use ShiKung\Mongodb\Operation\Insert;
@@ -128,6 +129,19 @@ class Manage
     {
         $find = new Find();
         return $find->count($this->server, $this->db, $collection, $condition);
+    }
+
+    /**
+     * @param $collection
+     * @param $pipeline
+     * @param $options
+     * @param $readPreference
+     * @return array|bool
+     */
+    public function aggregate($collection, $pipeline, $options, $readPreference)
+    {
+        $aggregate = new Aggregate();
+        return $aggregate->aggregate($this->server, $this->db, $collection, $pipeline, $options, $readPreference);
     }
 
     /**
