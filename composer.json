@@ -1,5 +1,5 @@
 {
-    "name": "shikung/mongodb-manager",
+    "name": "shikung/php-mongodb",
     "description": "manager",
     "type": "library",
     "license": "MIT",
