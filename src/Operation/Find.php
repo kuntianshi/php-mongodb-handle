@@ -13,9 +13,11 @@ use MongoDB\Driver\Query;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\UnexpectedValueException;
+use ShiKung\Mongodb\Dbs\Constant;
 
 class Find
 {
+    use Constant;
 
     /**
      * @param Server $server
@@ -24,9 +26,10 @@ class Find
      * @param array $condition
      * @param array $fields
      * @param array $options
+     * @param array $map
      * @return false|array
      */
-    public function findRow($server, $db, $collection, $condition = [], $fields = [], $options = [])
+    public function findRow($server, $db, $collection, $condition = [], $fields = [], $options = [], $map = [])
     {
         if (!isset($fields['_id'])) {
             $fields['_id'] = 0;
@@ -38,7 +41,7 @@ class Find
         $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
         $query = new Query($condition, $options);
         $cursor = $server->executeQuery($db . "." . $collection, $query, $readPreference);
-        $cursor->setTypeMap(array('root' => 'array', 'document' => 'array', 'array' => 'array'));
+        $cursor->setTypeMap($map ? $map : $this->map);
         $arr = $cursor->toArray();
         if ($arr && count($arr) > 0) {
             return $arr[0];
@@ -56,9 +59,11 @@ class Find
      * @param int $limit
      * @param array $sortFields
      * @param array $fields
+     * @param $options
+     * @param $map
      * @return mixed
      */
-    public function findAll($server, $db, $collection, $condition = [], $skip = 0, $limit = 0, $sortFields = [], $fields = [], $options = [])
+    public function findAll($server, $db, $collection, $condition = [], $skip = 0, $limit = 0, $sortFields = [], $fields = [], $options = [], $map = [])
     {
         $skip = intval($skip);
         $limit = intval($limit);
@@ -74,7 +79,7 @@ class Find
             ], $options);
         $query = new Query($condition, $options);
         $result = $server->executeQuery($db . '.' . $collection, $query);
-        $result->setTypeMap(array('root' => 'array', 'document' => 'array', 'array' => 'array'));
+        $result->setTypeMap($map ? $map : $this->map);
         return $result->toArray();
     }
 

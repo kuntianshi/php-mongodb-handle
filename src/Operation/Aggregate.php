@@ -19,6 +19,7 @@ class Aggregate
 {
 
     private $error;
+    private $map = ['root' => 'array', 'document' => 'array', 'array' => 'array'];
 
     /**
      * @param Server $server
@@ -26,10 +27,11 @@ class Aggregate
      * @param $collection
      * @param $pipeline
      * @param $options
+     * @param $map
      * @param $readPreference
      * @return bool|array
      */
-    public function aggregate($server, $db, $collection, $pipeline = [], $options = [], $readPreference = ReadPreference::RP_PRIMARY)
+    public function aggregate($server, $db, $collection, $pipeline = [], $options = [], $map = [], $readPreference = ReadPreference::RP_PRIMARY)
     {
         if (empty($pipeline)) {
             throw new InvalidArgumentException('pipeline is empty');
@@ -48,11 +50,10 @@ class Aggregate
         if (!in_array($readPreference, Parameters::preferences())) {
             throw new InvalidArgumentException('readPreference is error');
         }
-
         $command = new Command($cmd);
         try {
             $result = $server->executeCommand($db, $command, $readPreference);
-            $result->setTypeMap(array('root' => 'array', 'document' => 'array', 'array' => 'array'));
+            $result->setTypeMap($map ? $map : $this->map);
             return $result->toArray();
         } catch (InvalidArgumentException $e) {
             $this->error = $e->getMessage();

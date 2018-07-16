@@ -15,9 +15,11 @@ use MongoDB\Driver\Exception\InvalidArgumentException;
 use MongoDB\Driver\Server;
 use MongoCursorException;
 use MongoDB\Driver\WriteConcern;
+use ShiKung\Mongodb\Dbs\Constant;
 
 class Update
 {
+    use Constant;
 
     private $error;
 
@@ -31,7 +33,7 @@ class Update
      * @param int $timeout
      * @return bool
      */
-    public function update($server, $db, $collection, $condition, $new_data, $options = ['multi' => true], $timeout = 1000)
+    public function update($server, $db, $collection, $condition, $new_data, $options = ['multi' => true], $timeout = 0)
     {
         if (!is_string($collection) || (trim($condition) == '')) {
             throw new InvalidArgumentException('Invalid collection name');
@@ -39,6 +41,7 @@ class Update
         if (!is_array($condition)) {
             throw new InvalidArgumentException('Invalid condition data. The condition data should be a array');
         }
+        $timeout = $timeout ? $timeout : $this->db_default_timeout;
         try {
             $bulk = new BulkWrite();
             $bulk->update($condition, $new_data, $options);

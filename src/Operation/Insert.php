@@ -15,10 +15,11 @@ use MongoDB\Driver\Exception\InvalidArgumentException;
 use MongoDB\Driver\Server;
 use MongoCursorException;
 use MongoDB\Driver\WriteConcern;
+use ShiKung\Mongodb\Dbs\Constant;
 
 class Insert
 {
-
+    use Constant;
     private $error;
 
     /**
@@ -29,7 +30,7 @@ class Insert
      * @param $timeout
      * @return int|bool
      */
-    public function insert($server, $db, $collection, $bind, $timeout = 1000)
+    public function insert($server, $db, $collection, $bind, $timeout = 0)
     {
         if (!is_string($collection) || (trim($collection)) == '') {
             throw new InvalidArgumentException('Invalid collection ' . $collection . ' the collection is must input');
@@ -39,6 +40,7 @@ class Insert
         }
         $bulk = new BulkWrite();
         $bind['_id'] = $bulk->insert($bind);
+        $timeout = $timeout ? $timeout : $this->db_default_timeout;
         try {
             $writeConcern = new WriteConcern(WriteConcern::MAJORITY, $timeout);
             $result = $server->executeBulkWrite($db . '.' . $collection, $bulk, $writeConcern);
@@ -57,7 +59,7 @@ class Insert
      * @param $timeout
      * @return bool
      */
-    public function batchInsert($server, $db, $collection, $bind, $timeout = 1000)
+    public function batchInsert($server, $db, $collection, $bind, $timeout = 0)
     {
         if (!is_string($collection) || (trim($collection)) == '') {
             throw new InvalidArgumentException('Invalid collection ' . $collection . ' the collection is must input');
@@ -69,6 +71,7 @@ class Insert
         foreach ($bind as $key => $value) {
             $bulk->insert($value);
         }
+        $timeout = $timeout ? $timeout : $this->db_default_timeout;
         try {
             $writeConcern = new WriteConcern(WriteConcern::MAJORITY, $timeout);
             $result = $server->executeBulkWrite($db . '.' . $collection, $bulk, $writeConcern);

@@ -17,10 +17,11 @@ use ShiKung\Mongodb\Operation\Delete;
 use ShiKung\Mongodb\Operation\Find;
 use ShiKung\Mongodb\Operation\Insert;
 use ShiKung\Mongodb\Operation\Update;
-
+use ShiKung\Mongodb\Dbs\Constant;
 
 class Manage
 {
+    use Constant;
     /**
      * @var
      */
@@ -77,7 +78,7 @@ class Manage
      * @param int $timeout
      * @return bool|int
      */
-    public function insert($collection, $bind, $timeout = 1000)
+    public function insert($collection, $bind, $timeout = 0)
     {
         $insert = new Insert();
         return $insert->insert($this->server, $this->db, $collection, $bind, $timeout);
@@ -89,7 +90,7 @@ class Manage
      * @param int $timeout
      * @return bool
      */
-    public function batchInsert($collection, $bind, $timeout = 1000)
+    public function batchInsert($collection, $bind, $timeout = 0)
     {
         $insert = new Insert();
         return $insert->batchInsert($this->server, $this->db, $collection, $bind, $timeout);

@@ -12,9 +12,11 @@ use MongoDB\Driver\BulkWrite;
 use MongoDB\Driver\Exception\InvalidArgumentException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\WriteConcern;
+use ShiKung\Mongodb\Dbs\Constant;
 
 class Delete
 {
+    use Constant;
 
     private $error;
 
@@ -27,10 +29,11 @@ class Delete
      * @param $timeout
      * @return bool|int
      */
-    public function delete($server, $db, $collection, $condition, $options, $timeout = 1000)
+    public function delete($server, $db, $collection, $condition, $options, $timeout = 0)
     {
         $bulk = new BulkWrite();
         $bulk->delete($condition, $options);
+        $timeout = $timeout ? $timeout : $this->db_default_timeout;
         $writeConcern = new WriteConcern(WriteConcern::MAJORITY, $timeout);
         try {
 
