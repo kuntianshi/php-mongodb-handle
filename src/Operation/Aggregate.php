@@ -14,12 +14,12 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Command;
 use stdClass;
 use ShiKung\Mongodb\Dbs\Parameters;
+use ShiKung\Mongodb\Dbs\Constant;
 
 class Aggregate
 {
-
+    use Constant;
     private $error;
-    private $map = ['root' => 'array', 'document' => 'array', 'array' => 'array'];
 
     /**
      * @param Server $server
